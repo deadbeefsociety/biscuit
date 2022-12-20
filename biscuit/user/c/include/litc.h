@@ -786,11 +786,14 @@ int ispunct(int);
 int isspace(int);
 int isupper(int);
 int isxdigit(int);
+int isalnum(int);
+
 
 //struct lconv* localeconv(void); /*REDIS*/
 double log(double);
 dev_t makedev(uint, uint);
 int memcmp(const void *, const void *, size_t);
+void *memchr(void *s, int c, size_t n);
 void *memcpy(void *, const void *, size_t);
 void *memmove(void *, const void *, size_t);
 void *memset(void *, int, size_t);

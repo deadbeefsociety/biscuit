@@ -1982,6 +1982,12 @@ isdigit(int c)
 }
 
 int
+isalnum(int c)
+{
+	return 	(isalpha(c) || isdigit(c));
+}
+
+int
 isprint(int c)
 {
 	return isalpha(c) || isdigit(c) || ispunct(c);
@@ -2054,6 +2060,29 @@ memcmp(const void *q, const void *p, size_t sz)
 		return 0;
 	return *s1 - *s2;
 }
+
+/* from linux man page:
+The memchr() function scans the initial n bytes of the memory area pointed to by s for the first instance of c.  Both c and the bytes of the memory area pointed to by s are interpreted
+as unsigned char. 
+
+returns a ptr to the position of the char, or NULL if not found
+*/
+void *
+memchr(void *s, int c, size_t n)
+{
+	
+	for (size_t i = 0 ; i < n; i ++) {
+		unsigned char current = * (unsigned char*) (s + i);
+		unsigned char target = (unsigned char) c;
+		if (target == current) {
+			void *found = s + i;
+			return found;
+		}
+	}
+	return NULL;
+
+}
+
 
 void *
 memcpy(void *dst, const void *src, size_t n)

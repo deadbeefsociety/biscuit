@@ -3,6 +3,8 @@ package defs
 type Msgfl_t uint
 type Fdopt_t uint
 
+// making it as close to linux syscalls for now for compat
+// check https://github.com/torvalds/linux/blob/master/arch/ia64/kernel/syscalls/syscall.tbl for linux syscalls on x64
 const (
 	SYS_READ            = 0
 	SYS_WRITE           = 1
@@ -46,10 +48,19 @@ const (
 	PROT_WRITE          = 0x2
 	PROT_EXEC           = 0x4
 	SYS_MUNMAP          = 11
+	// SYS_BRK          = 12 // TODO Implement; biscuit uses the heap
 	SYS_SIGACT          = 13
+	// SYS_SIGPROCMASK 14 TODO
+	// SYS_SIGRETURN 15 TODO
+	// SYS_IOCTL 16 TODO
+	// SYS_PREAD64 17 TODO
+	// SYS_PWRITE64 18 TODO
 	SYS_READV           = 19
 	SYS_WRITEV          = 20
 	SYS_ACCESS          = 21
+	// SYS_PIPE 22 TODO
+	// SYS_SELECT 23 TODO
+	// SYS_DUP 32 TODO
 	SYS_DUP2            = 33
 	SYS_PAUSE           = 34
 	SYS_GETPID          = 39
@@ -96,9 +107,9 @@ const (
 	FORK_THREAD      = 0x2
 	SYS_EXECV        = 59
 	SYS_EXIT         = 60
-	CONTINUED        = 1 << 9
-	EXITED           = 1 << 10
-	SIGNALED         = 1 << 11
+	CONTINUED        = 1 << 9  // 512
+	EXITED           = 1 << 10 // 1024
+	SIGNALED         = 1 << 11 // 2048
 	SIGSHIFT         = 27
 	SYS_WAIT4        = 61
 	WAIT_ANY         = -1

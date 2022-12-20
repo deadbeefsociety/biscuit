@@ -85,7 +85,7 @@ SKELDEPS := $(shell find $(SKEL))
 
 CPUS := $(shell echo $${CPUS:-1})
 
-QOPTS := -m 8G -smp cpus=$(CPUS) -cpu Nehalem
+QOPTS := -m 2G -smp cpus=$(CPUS) -cpu Nehalem
 # for testing bhw2's configuration
 #QOPTS := -m 8G -cpu Nehalem -smp sockets=2,cores=10,threads=2
 
@@ -223,7 +223,9 @@ qemu-gdb: gqemu-gdb
 
 QOPTS += -device ahci,id=ahci0 \
 	-drive file=go.img,if=none,format=raw,id=drive-sata0-0-0 \
-	-device ide-drive,drive=drive-sata0-0-0,id=sata0-0-0,bus=ahci0.0
+	-device ide-drive,drive=drive-sata0-0-0,id=sata0-0-0,bus=ahci0.0 \
+	-no-reboot
+	#-no-reboot -device pvpanic -nographic
 
 old_qemu: d.img
 	$(QEMU) $(QOPTS) -hda d.img

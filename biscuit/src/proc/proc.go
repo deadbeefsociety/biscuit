@@ -391,8 +391,8 @@ func (p *Proc_t) trap_proc(tf *[defs.TFSIZE]uintptr, tid defs.Tid_t, intno, aux 
 		restart = err == -defs.ENOHEAP
 		if err != 0 && !restart {
 			fmt.Printf("*** fault *** %v: addr %x, "+
-				"rip %x, err %v. killing...\n", p.Name, faultaddr,
-				tf[defs.TF_RIP], err)
+				"rip %x, rsp %x, rbp %x, rsi %x, err %v. killing...\n", p.Name, faultaddr,
+				tf[defs.TF_RIP],tf[defs.TF_RSP],tf[defs.TF_RBP],tf[defs.TF_RSI], err)
 			p.syscall.Sys_exit(p, tid, defs.SIGNALED|defs.Mkexitsig(11))
 		}
 	case defs.DIVZERO, defs.GPFAULT, defs.UD:
