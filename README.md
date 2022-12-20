@@ -1,4 +1,4 @@
-# Biscuit research OS
+# Maintained fork of Biscuit research OS
 
 Biscuit is a monolithic, POSIX-subset operating system kernel in Go for x86-64
 CPUs. It was written to study the performance trade-offs of using a high-level
@@ -28,13 +28,23 @@ The root of the repository contains the Go 1.10.1 tools/runtime. Some of
 Biscuit's code is modifications to the runtime, mostly in
 src/runtime/os_linux.go.
 
+You will need to install some dependencies in order to build it: (or you can try using the provided [Dockerfile](./Dockerfile)
+
+```sh
+# install deps (e.g. on ubuntu/debian):
+sudo apt install qemu-system build-essential curl python python3 xxd
+cd ~ #assuming you want to use your home dir as base for go, otherwise cd elsewhere
+curl -fsSL -o go.linux-amd64.tar.gz https://go.dev/dl/go1.10.8.linux-amd64.tar.gz && tar -xzf go.linux-amd64.tar.gz
+```
+
+
 Biscuit used to build on Linux and OpenBSD, but probably only builds on Linux
 currently. You must build Biscuit's modified Go runtime before building
 Biscuit:
-```
+```sh
 $ git clone https://github.com/mit-pdos/biscuit.git
 $ cd biscuit/src
-$ ./make.bash
+$ GOROOT_BOOTSTRAP=~/go GO111MODULE=off ./make.bash
 ```
 
 then go to Biscuit's main part and launch it:
