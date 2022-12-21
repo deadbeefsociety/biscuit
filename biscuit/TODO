@@ -1,17 +1,40 @@
-. fix page faults on xor rbp,rbp instructions:
-https://www.vistech.net/~champ/online-docs/books/linuxkernel2/060.htm
-·         A 3-bit error_code, which is pushed on the stack by the control unit when the exception occurred (see Section 4.2.4). The bits have the following meanings.
-o        If bit 0 is clear, the exception was caused by an access to a page that is not present (the Present flag in the Page Table entry is clear); otherwise, if bit 0 is set, the exception was caused by an invalid access right.
-o        If bit 1 is clear, the exception was caused by a read or execute access; if set, the exception was caused by a write access.
-o        If bit 2 is clear, the exception occurred while the processor was in Kernel Mode; otherwise, it occurred in User Mode. 
+. binary compat with linux static binaries? why not (the syscall nums are basically the same, except some are not impl?)
 
->>> 5 == 0b101
-True
+# bash
+panic: insert mapping into PS page
 
-so bit 2 and bit 0 is set, bit 1 is clear; meaning
-	- 0 set: caused by invalid access 
-	- 1 clear: caused by read / execute access
-	- 2 set: occurred in user mode
+goroutine 27 [running]:
+vm.pmap_pgtbl.func1(0x2001a3, 0x220000102000)
+	/root/biscuit/biscuit/src/vm/pmap.go:42 +0x60
+vm.pmap_pgtbl(0x220008ea9000, 0x400000, 0x562901, 0x6, 0xc00090dc00, 0xc00090dc20
+)
+	/root/biscuit/biscuit/src/vm/pmap.go:81 +0x1a7
+vm.(*Vminfo_t).Ptefor(0xc00090dc20, 0x220008ea9000, 0x402554, 0xa2000, 0x4)
+	/root/biscuit/biscuit/src/vm/vm.go:96 +0x109
+vm.Sys_pgfault(0xc0008fc7f8, 0xc00090dc20, 0x402554, 0x4, 0x0)
+	/root/biscuit/biscuit/src/vm/as.go:343 +0xa0
+main.segload(0xc0008fc780, 0x402554, 0xc000911a98, 0x5aa280, 0xc000901410, 0x0)
+	/root/biscuit/biscuit/src/kernel/syscall.go:4521 +0x381
+main.(*elf_t).elf_load(0xc000911c50, 0xc0008fc780, 0xc00091e8a0, 0x200, 0x0, 0x20
+0, 0xc0009012f0)
+	/root/biscuit/biscuit/src/kernel/syscall.go:4577 +0x222
+main.sys_execv1(0xc0008fc780, 0xc0008fe3c0, 0xc00001cfa0, 0x9, 0x10, 0xc000758360
+, 0x1, 0xc, 0x0)
+	/root/biscuit/biscuit/src/kernel/syscall.go:3336 +0x454
+main.sys_execv(0xc0008fc780, 0xc0008fe3c0, 0x2c8000009780, 0x7f8000006d80, 0x14)
+	/root/biscuit/biscuit/src/kernel/syscall.go:3263 +0x117
+main.(*syscall_t).Syscall(0x6d98c0, 0xc0008fc780, 0xc, 0xc0008fe3c0, 0x0)
+	/root/biscuit/biscuit/src/kernel/syscall.go:198 +0x73f
+proc.(*Proc_t).trap_proc(0xc0008fc780, 0xc0008fe3c0, 0xc, 0x40, 0x0, 0xc0000f87f8
+)
+	/root/biscuit/biscuit/src/proc/proc.go:379 +0x5f0
+proc.(*Proc_t).run(0xc0008fc780, 0xc0008fe3c0, 0xc)
+	/root/biscuit/biscuit/src/proc/proc.go:453 +0x38d
+created by proc.(*Proc_t).Sched_add
+	/root/biscuit/biscuit/src/proc/proc.go:475 +0x53
+ exit with code 0000000000000002 .
+halting
+
 
 . fix syscall cpu tf/fxbuf bug
 x fix/remove syscall "fastpath" (broke it recently, fast path never taken)
