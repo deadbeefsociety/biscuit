@@ -10,9 +10,11 @@ import "fmt"
 const VREC int = 0x42
 const VDIRECT int = 0x44
 const VEND int = 0x50
-const VUSER int = 0x59
+// const VUSER int = 0x59
 
-const USERMIN int = VUSER << 39
+// const USERMIN int = VUSER << 39
+// XXX what if I hack this?
+const USERMIN int = 0x400000
 const DMAPLEN int = 1 << 39
 
 var Vdirect = uintptr(VDIRECT << 39)
