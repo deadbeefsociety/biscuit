@@ -1,2 +1,17 @@
-- fix syscall cpu tf/fxbuf bug
+. fix page faults on xor rbp,rbp instructions:
+https://www.vistech.net/~champ/online-docs/books/linuxkernel2/060.htm
+·         A 3-bit error_code, which is pushed on the stack by the control unit when the exception occurred (see Section 4.2.4). The bits have the following meanings.
+o        If bit 0 is clear, the exception was caused by an access to a page that is not present (the Present flag in the Page Table entry is clear); otherwise, if bit 0 is set, the exception was caused by an invalid access right.
+o        If bit 1 is clear, the exception was caused by a read or execute access; if set, the exception was caused by a write access.
+o        If bit 2 is clear, the exception occurred while the processor was in Kernel Mode; otherwise, it occurred in User Mode. 
+
+>>> 5 == 0b101
+True
+
+so bit 2 and bit 0 is set, bit 1 is clear; meaning
+	- 0 set: caused by invalid access 
+	- 1 clear: caused by read / execute access
+	- 2 set: occurred in user mode
+
+. fix syscall cpu tf/fxbuf bug
 x fix/remove syscall "fastpath" (broke it recently, fast path never taken)
