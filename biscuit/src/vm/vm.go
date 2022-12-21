@@ -49,6 +49,10 @@ type Mfile_t struct {
 	mapcount int
 }
 
+/**
+ * page table entry
+ * 
+ **/
 type Vminfo_t struct {
 	Mtype mtype_t
 	Pgn   uintptr
@@ -270,6 +274,10 @@ func (m *Vmregion_t) Clear() {
 	})
 }
 
+/**
+ * lookup a vm region information struct given a virtual address 
+ * return Vminfo_t block and whether or not it suceed
+ **/
 func (m *Vmregion_t) Lookup(va uintptr) (*Vminfo_t, bool) {
 	pgn := va >> PGSHIFT
 	n := m.rb.lookup(pgn)
