@@ -3649,7 +3649,7 @@ enum {
 
 static void guineapig(int fd, int op)
 {
-	char buf[4096*2];
+	char buf[4096*2] = {0,}; //initialize it with all 0's to begin with
 	struct sockaddr_in saddr;
 	socklen_t slen = sizeof(saddr);
 	pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
