@@ -234,6 +234,8 @@ func (s *syscall_t) Syscall(p *proc.Proc_t, tid defs.Tid_t, tf *[defs.TFSIZE]uin
 		ret = sys_setrlimit(p, a1, a2)
 	case defs.SYS_SYNC:
 		ret = sys_sync(p)
+	case defs.SYS_ARCH_PRCTL:
+		ret = sys_arch_prctl(p, a1, a2)
 	case defs.SYS_REBOOT:
 		ret = sys_reboot(p)
 	case defs.SYS_NANOSLEEP:
@@ -1391,6 +1393,15 @@ func sys_mknod(p *proc.Proc_t, pathn, moden, devn int) int {
 
 func sys_sync(p *proc.Proc_t) int {
 	return int(thefs.Fs_sync())
+}
+
+// TODO not impl
+// https://www.man7.org/linux/man-pages/man2/arch_prctl.2.html
+// returns 0 on success, -1 on failure
+func sys_arch_prctl(p *proc.Proc_t, code int,  addr int)  int {
+	// not implemented yet, so we ret -1
+	fmt.Println("sys_arch_prctl called!");
+	return -1;
 }
 
 func sys_reboot(p *proc.Proc_t) int {
@@ -3285,6 +3296,7 @@ func sys_execv1(p *proc.Proc_t, tf *[defs.TFSIZE]uintptr, paths ustr.Ustr,
 	op_pmap := p.Vm.P_pmap
 	var ok bool
 	p.Vm.Pmap, p.Vm.P_pmap, ok = physmem.Pmap_new()
+	// fmt.Printf("mapped mem: %#v , |||||| %#v , ok:%v\n", p.Vm.Pmap, p.Vm.P_pmap, ok)
 	if !ok {
 		p.Vm.Pmap, p.Vm.P_pmap = opmap, op_pmap
 		return int(-defs.ENOMEM)

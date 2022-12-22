@@ -78,6 +78,7 @@ const (
 	B_SYS_RENAME
 	B_SYS_SENDMSG
 	B_SYS_SENDTO
+	B_SYS_ARCH_PRCTL
 	B_SYS_SETRLIMIT
 	B_SYS_SETSOCKOPT
 	B_SYS_SHUTDOWN
@@ -183,6 +184,7 @@ var boundres = []*res.Res_t {
 	B_SYS_SOCKET: &res.Res_t{Objs: runtime.Resobjs_t{1: uint32(uint(bounds[B_SYS_SOCKET]))}},
 	B_SYS_SOCKETPAIR: &res.Res_t{Objs: runtime.Resobjs_t{1: uint32(uint(bounds[B_SYS_SOCKETPAIR]))}},
 	B_SYS_STAT: &res.Res_t{Objs: runtime.Resobjs_t{1: uint32(uint(bounds[B_SYS_STAT]))}},
+	B_SYS_ARCH_PRCTL: &res.Res_t{Objs: runtime.Resobjs_t{1: uint32(uint(bounds[B_SYS_ARCH_PRCTL]))}},
 	B_SYS_SYNC: &res.Res_t{Objs: runtime.Resobjs_t{1: uint32(uint(bounds[B_SYS_SYNC]))}},
 	B_SYS_THREXIT: &res.Res_t{Objs: runtime.Resobjs_t{1: uint32(uint(bounds[B_SYS_THREXIT]))}},
 	B_SYS_TRUNCATE: &res.Res_t{Objs: runtime.Resobjs_t{1: uint32(uint(bounds[B_SYS_TRUNCATE]))}},
@@ -278,6 +280,7 @@ var bounds = []int{
 	B_SYS_SOCKETPAIR: 2 * 4120 + 455 * 32 + 1 * 8 + 125 * 48 + 4 * 824 + 2 * 72 + 58 * 24 + 2 * 200 + 44 * 120 + 317 * 40 + 52 * 16 + 4 * 56 + 68 * 216 + 1 * 4096 + 1 * 1 + 3 * 64 + 1 * 20,
 	B_SYS_STAT: 3 * 8 + 3 * 1 + 1 * 72 + 58 * 120 + 1 * 4096 + 707 * 48 + 760 * 32 + 6 * 824 + 187 * 14 + 3 * 536 + 172 * 216 + 157 * 24 + 3 * 64 + 156 * 16 + 760 * 40 + 1 * 20,
 	B_SYS_SYNC: 3 * 16,
+	B_SYS_ARCH_PRCTL: 3 * 16,
 	B_SYS_THREXIT: 2 * 24 + 1 * 8 + 1 * 144 + 2 * 56,
 	B_SYS_TRUNCATE: 1124 * 32 + 3 * 8 + 3 * 1 + 3 * 64 + 154 * 216 + 123 * 24 + 1408 * 48 + 308 * 16 + 1 * 20 + 740 * 40 + 1 * 4096 + 107 * 120 + 3 * 536 + 10 * 824 + 561 * 14,
 	B_SYS_UNLINK: 1082 * 40 + 1211 * 32 + 3 * 8 + 209 * 24 + 106 * 120 + 1 * 20 + 2322 * 48 + 237 * 216 + 3 * 1 + 1 * 4096 + 3 * 64 + 935 * 14 + 3 * 536 + 211 * 16 + 10 * 824,
