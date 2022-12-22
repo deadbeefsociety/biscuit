@@ -1,6 +1,21 @@
 package util
 
+import "fmt"
 import "unsafe"
+import "defs"
+
+// dump all regsiters
+func Tfdump(tf *[defs.TFSIZE]uintptr) {
+	fmt.Printf("RIP: %#x\n", tf[defs.TF_RIP])
+	fmt.Printf("RAX: %#x\n", tf[defs.TF_RAX])
+	fmt.Printf("RDI: %#x\n", tf[defs.TF_RDI])
+	fmt.Printf("RSI: %#x\n", tf[defs.TF_RSI])
+	fmt.Printf("RBX: %#x\n", tf[defs.TF_RBX])
+	fmt.Printf("RCX: %#x\n", tf[defs.TF_RCX])
+	fmt.Printf("RDX: %#x\n", tf[defs.TF_RDX])
+	fmt.Printf("RSP: %#x\n", tf[defs.TF_RSP])
+}
+
 
 func Min(a, b int) int {
 	if a < b {

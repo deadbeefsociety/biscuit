@@ -9,14 +9,16 @@ import "util"
 
 //import "fd"
 
-const PTE_P mem.Pa_t = 1 << 0
-const PTE_W mem.Pa_t = 1 << 1
-const PTE_U mem.Pa_t = 1 << 2
-const PTE_A mem.Pa_t = 1 << 5
-const PTE_D mem.Pa_t = 1 << 6
-const PTE_G mem.Pa_t = 1 << 8
-const PTE_PCD mem.Pa_t = 1 << 4
-const PTE_PS mem.Pa_t = 1 << 7
+// PTE = Page Table Entry
+// for more on Intel page table entries see https://wiki.osdev.org/Paging#Page_Directory
+const PTE_P mem.Pa_t = 1 << 0 // Present bit
+const PTE_W mem.Pa_t = 1 << 1 // read/Write
+const PTE_U mem.Pa_t = 1 << 2 // User/supervisor
+const PTE_A mem.Pa_t = 1 << 5 // Available
+const PTE_D mem.Pa_t = 1 << 6 // Dirty
+const PTE_G mem.Pa_t = 1 << 8 // Global - tells the processor not to invalidate the TLB entry corresponding to the page upon a MOV to CR3 instruction.. 
+const PTE_PCD mem.Pa_t = 1 << 4 // Page 'Cache Disable' bit; if set, page will not be cached
+const PTE_PS mem.Pa_t = 1 << 7 // Page Size; If the bit is set, then the PDE maps to a page that is 4 MiB in size. Otherwise, it maps to a 4 KiB page table
 
 // our flags; bits 9-11 are ignored for all page map entries in long mode
 const PTE_COW mem.Pa_t = 1 << 9

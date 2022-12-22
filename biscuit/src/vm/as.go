@@ -13,6 +13,8 @@ import "res"
 import "ustr"
 import "util"
 
+import "fmt"
+
 type Vm_t struct {
 	// lock for vmregion, pmpages, pmap, and p_pmap
 	sync.Mutex
@@ -531,12 +533,31 @@ func (as *Vm_t) Page_remove(va int) bool {
 // returns true if the pagefault was handled successfully
 func (as *Vm_t) Pgfault(tid defs.Tid_t, fa, ecode uintptr) defs.Err_t {
 	as.Lock_pmap()
-	vmi, ok := as.Vmregion.Lookup(fa)
+	vmi, ok := as.Vmregion.Lookup(fa) // lookup fault address
+	if (fa < 0x2c8000000000) { // not on the 'stack?'
+		fmt.Printf("*** Sys_pgfault ***: addr %x, ecode %d, tid %d ", fa, ecode, tid);
+		fmt.Printf("Vminfo_t (Pg Table Entry):\n%#v\n", vmi);
+	}
+	
 	if !ok {
 		as.Unlock_pmap()
 		return -defs.EFAULT
-	}
+	}	
+
+	// XXX print debugging for less normal page faults; turn this off if too noisy or filter by different ecode conditions
+	/* ecode is 3 bits:
+	- If bit 0 is clear, the exception was caused by an access to a page that is not present (the Present flag in the Page Table entry is clear); otherwise, if bit 0 is set, the exception was caused by an invalid access right.
+    - If bit 1 is clear, the exception was caused by a read or execute access; if set, caused by a write access.
+	- If bit 2 is clear, the exception occurred while the processor was in Kernel Mode; otherwise, in User Mode. 
+	*/
+	// if (ecode == 5) { 
+		
+	// }
+	
+
 	ret := Sys_pgfault(as, vmi, fa, ecode)
+
+	
 	as.Unlock_pmap()
 	return ret
 }

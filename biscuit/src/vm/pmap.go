@@ -38,8 +38,10 @@ func pmap_pgtbl(pml4 *mem.Pmap_t, v int, create bool, perms mem.Pa_t) (*mem.Pmap
 	}
 
 	cpe := func(pe mem.Pa_t) *mem.Pmap_t {
-		if pe&PTE_PS != 0 {
-			panic("insert mapping into PS page")
+		if pe&PTE_PS != 0 { // PTE_PS (Page Size bit) when non-zero maps to a page that is 4 MiB in size
+			// panic error, mapping is too big so must be inserted into a 4MiB page?
+			panic("panic: insert mapping into PS page")
+
 		}
 		phys := uintptr(pe & PTE_ADDR)
 		return (*mem.Pmap_t)(unsafe.Pointer(mem.Vdirect + phys))

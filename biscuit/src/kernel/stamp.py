@@ -14,7 +14,7 @@ if left < 0:
     if sz % 512 != 0:
       sb += 1
     s = 'boot sector is bigger than numblocks (is %d, should be %d)' % (numblocks, sb)
-    raise ValueError(s)
+    #raise ValueError(s)
 
 with open(fn, 'a') as f:
     f.write(''.join([chr(0) for i in range(left)]))

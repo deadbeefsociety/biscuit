@@ -17,6 +17,7 @@ import "tinfo"
 import "ustr"
 import "vm"
 import "hashtable"
+import "util"
 
 // per-process limits
 type Ulimit_t struct {
@@ -390,9 +391,8 @@ func (p *Proc_t) trap_proc(tf *[defs.TFSIZE]uintptr, tid defs.Tid_t, intno, aux 
 		err := p.Vm.Pgfault(tid, faultaddr, tf[defs.TF_ERROR])
 		restart = err == -defs.ENOHEAP
 		if err != 0 && !restart {
-			fmt.Printf("*** fault *** %v: addr %x, tid %d, error %x, "+
-				"rip %x, rsp %x, rbp %x, rsi %x, err %v. killing...\n", p.Name, faultaddr, tid, tf[defs.TF_ERROR],
-				tf[defs.TF_RIP],tf[defs.TF_RSP],tf[defs.TF_RBP],tf[defs.TF_RSI], err)
+			fmt.Printf("*** fault *** %v: addr %x, tid %d, ecode %x, Pgfault_err %v. killing...\n", p.Name, faultaddr, tid, tf[defs.TF_ERROR], err)
+			util.Tfdump(tf)
 			p.syscall.Sys_exit(p, tid, defs.SIGNALED|defs.Mkexitsig(11))
 		}
 	case defs.DIVZERO, defs.GPFAULT, defs.UD:
