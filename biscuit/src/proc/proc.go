@@ -396,8 +396,20 @@ func (p *Proc_t) trap_proc(tf *[defs.TFSIZE]uintptr, tid defs.Tid_t, intno, aux 
 			p.syscall.Sys_exit(p, tid, defs.SIGNALED|defs.Mkexitsig(11))
 		}
 	case defs.DIVZERO, defs.GPFAULT, defs.UD:
-		fmt.Printf("%s -- TRAP: %v, RIP: %x\n", p.Name, intno,
-			tf[defs.TF_RIP])
+		if intno == defs.DIVZERO {
+			fmt.Printf("%s -- TRAP: DIVZERO (hex 0x%x dec %d), RIP: %x\n", p.Name, intno,intno, tf[defs.TF_RIP])
+		} 
+		if intno == defs.GPFAULT {
+			fmt.Printf("%s -- TRAP: GPFAULT (hex 0x%x dec %d), RIP: %x\n", p.Name, intno,intno, tf[defs.TF_RIP])
+		}
+		if intno == defs.UD {
+			fmt.Printf("%s -- TRAP: UD (hex 0x%x dec %d), RIP: %x\n", p.Name, intno,intno, tf[defs.TF_RIP])
+			fastret = true;
+			restart = false;
+			break;
+		}
+		
+		util.Tfdump(tf)
 		p.syscall.Sys_exit(p, tid, defs.SIGNALED|defs.Mkexitsig(4))
 	case defs.TLBSHOOT, defs.PERFMASK, defs.INT_KBD, defs.INT_COM1, defs.INT_MSI0,
 		defs.INT_MSI1, defs.INT_MSI2, defs.INT_MSI3, defs.INT_MSI4, defs.INT_MSI5, defs.INT_MSI6,
