@@ -4,7 +4,7 @@ type Msgfl_t uint
 type Fdopt_t uint
 
 // making it as close to linux syscalls for now for compat
-// check https://github.com/torvalds/linux/blob/master/arch/ia64/kernel/syscalls/syscall.tbl for linux syscalls on x64
+// check linux syscalls on x64: https://github.com/torvalds/linux/blob/master/arch/x86/entry/syscalls/syscall_64.tbl 
 const (
 	SYS_READ            = 0
 	SYS_WRITE           = 1
@@ -139,6 +139,7 @@ const (
 	RUSAGE_SELF      = 1
 	RUSAGE_CHILDREN  = 2
 	SYS_MKNOD        = 133
+	SYS_ARCH_PRCTL   = 158 // not impl sys_arch_prctl; XXX just return 0 for now
 	SYS_SETRLMT      = 160
 	SYS_SYNC         = 162
 	SYS_REBOOT       = 169
