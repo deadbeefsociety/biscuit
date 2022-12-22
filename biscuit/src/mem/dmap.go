@@ -10,14 +10,16 @@ import "fmt"
 const VREC int = 0x42
 const VDIRECT int = 0x44
 const VEND int = 0x50
-// const VUSER int = 0x59
+const VUSER int = 0x59
 
-// const USERMIN int = VUSER << 39
-// XXX what if I hack this?
-const USERMIN int = 0x400000
-const DMAPLEN int = 1 << 39
+const USERMIN int = 0x400000 //VUSER << 39
+// XXX what if I hack this? I can either lower everything, or dynamically translate userspace addresses?
+// const USERMIN int = 0x400000
+// 1<<39 = '0x8000000000'
+// 1 << 39 // size of each page, which is 1GB; can we make this smaller..?
+const DMAPLEN int = 1 << 39 // 10 MB
 
-var Vdirect = uintptr(VDIRECT << 39)
+var Vdirect = uintptr(VDIRECT << 39) // 0x44 << 39 = 0x220000000000
 
 // l is length of mapping in bytes
 func Dmaplen(p Pa_t, l int) []uint8 {
@@ -52,7 +54,7 @@ func mkpg(l4 int, l3 int, l2 int, l1 int) int {
 		var ret uint
 		switch c {
 		case 3:
-			ret = uint(l4) & 0x1ff
+			ret = uint(l4) & 0x1ff // 0x1ff = 511, or 512-1
 		case 2:
 			ret = uint(l3) & 0x1ff
 		case 1:
@@ -66,13 +68,13 @@ func mkpg(l4 int, l3 int, l2 int, l1 int) int {
 	return int(lb(3) | lb(2) | lb(1) | lb(0))
 }
 
-func caddr(l4 int, ppd int, pd int, pt int, off int) *int {
+func caddr(l4 int, ppd int, pd int, pt int, offset int) *int {
 	ret := mkpg(l4, ppd, pd, pt)
-	ret += off * 8
+	ret += offset * 8
 
 	return (*int)(unsafe.Pointer(uintptr(ret)))
 }
-
+// Kernel Entries
 type Kent_t struct {
 	Pml4slot int
 	Entry    Pa_t
@@ -101,6 +103,7 @@ func Dmap_init() {
 	}
 
 	_dpte := caddr(VREC, VREC, VREC, VREC, VDIRECT)
+	fmt.Printf("_dpte:%x (%d)\n", _dpte, _dpte)
 	dpte := (*Pa_t)(unsafe.Pointer(_dpte))
 	if *dpte&PTE_P != 0 {
 		panic("dmap slot taken")
