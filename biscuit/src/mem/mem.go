@@ -21,7 +21,7 @@ const PTE_PS Pa_t = 1 << 7
 
 const PTE_ADDR Pa_t = PGMASK
 
-type Pa_t uintptr
+type Pa_t uintptr // physical address
 type Bytepg_t [PGSIZE]uint8
 type Pg_t [512]int
 type Pmap_t [512]Pa_t
