@@ -95,7 +95,7 @@ ifeq ($(OS), OpenBSD)
 	ASFLAGS += -nopie
 endif
 
-all: go.img net.img
+all: go.img
 
 -include $(RFS)
 
@@ -125,16 +125,6 @@ mkfs: src/mkfs/mkfs.go  $(FSRC) $(PSRC) src/ufs/ufs.go
 go.img: $(K)/boot  $(K)/main.gobin $(SKELDEPS) $(FSPROGS) ./mkfs
 	./mkfs $(K)/boot $(K)/main.gobin $@ $(SKEL) || { rm -f $@; false; }
 
-net.img: $(K)/boot $(K)/main.gobin $(SKELDEPS) $(FSPROGS) ./mkfs
-	./mkfs $(K)/boot $(K)/main.gobin $@ $(SKEL) || { rm -f $@; false; }
-
-BHW := bhw.pdos.csail.mit.edu
-net: net.img
-	./net-helper.sh $^ $(BHW)
-
-BHW2 := bhw2.pdos.csail.mit.edu
-net2: net.img
-	./net-helper.sh $^ $(BHW2)
 
 $(GOBIN):
 	@echo; echo; echo; \
@@ -155,8 +145,9 @@ $(FSCPROGS): fsdir/bin/% : user/c/%
 	objcopy -S $^ $@
 
 $(CPROGS): CFLAGS += -I user/c/include -fPIC -std=gnu11
+# -Wl,option passes option to linker
 $(CPROGS): % : %.c user/c/litc.o
-	$(CC) $(CFLAGS) -Wl,-T user/c/linker.ld -Wl,--build-id=none \
+	$(CC) $(CFLAGS) -Wl,-T user/c/linker.ld -Wl,--build-id=none -Wl,--no-relax \
 	    -o $@ user/c/litc.o $<
 
 $(FSCXXPROGS): fsdir/bin/% : user/cxx/%
@@ -223,7 +214,7 @@ qemu-gdb: gqemu-gdb
 
 QOPTS += -device ahci,id=ahci0 \
 	-drive file=go.img,if=none,format=raw,id=drive-sata0-0-0 \
-	-device ide-drive,drive=drive-sata0-0-0,id=sata0-0-0,bus=ahci0.0 \
+	-device ide-hd,drive=drive-sata0-0-0,id=sata0-0-0,bus=ahci0.0 \
 	-no-reboot
 	#-no-reboot -device pvpanic -nographic
 
