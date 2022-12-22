@@ -52,7 +52,7 @@ type Mfile_t struct {
 }
 
 /**
- * page table entry
+ * Virtual memory map entry
  * 
  **/
 type Vminfo_t struct {
