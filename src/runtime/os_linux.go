@@ -2453,6 +2453,7 @@ func trap(tf *[TFSIZE]uintptr) {
 	cpu := Gscpu()
 
 	// CPU exceptions in kernel mode are fatal errors
+	// see https://wiki.osdev.org/Exceptions for all exception codes
 	if trapno < TRAP_TIMER && (tf[TF_CS] & 3) == 0 {
 		kernel_fault(tf)
 	}
