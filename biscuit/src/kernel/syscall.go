@@ -91,6 +91,7 @@ var _sysbounds = []*res.Res_t{
 	defs.SYS_PWRITE:     bounds.Bounds(bounds.B_SYS_PWRITE),
 	defs.SYS_FUTEX:      bounds.Bounds(bounds.B_SYS_FUTEX),
 	defs.SYS_GETTID:     bounds.Bounds(bounds.B_SYS_GETTID),
+	defs.SYS_ARCH_PRCTL: bounds.Bounds(bounds.B_SYS_ARCH_PRCTL),
 }
 
 // Implements Syscall_i
@@ -108,6 +109,8 @@ func (s *syscall_t) Syscall(p *proc.Proc_t, tid defs.Tid_t, tf *[defs.TFSIZE]uin
 	}
 
 	sysno := int(tf[defs.TF_RAX])
+
+	fmt.Printf(" sysno: %v\n", sysno)
 
 	//lim, ok := _sysbounds[sysno]
 	//if !ok {
@@ -127,6 +130,10 @@ func (s *syscall_t) Syscall(p *proc.Proc_t, tid defs.Tid_t, tf *[defs.TFSIZE]uin
 	a3 := int(tf[defs.TF_RDX])
 	a4 := int(tf[defs.TF_RCX])
 	a5 := int(tf[defs.TF_R8])
+
+	// if sysno  {
+		
+	// }
 
 	var ret int
 	switch sysno {
@@ -1399,9 +1406,9 @@ func sys_sync(p *proc.Proc_t) int {
 // https://www.man7.org/linux/man-pages/man2/arch_prctl.2.html
 // returns 0 on success, -1 on failure
 func sys_arch_prctl(p *proc.Proc_t, code int,  addr int)  int {
-	// not implemented yet, so we ret -1
 	fmt.Println("sys_arch_prctl called!");
-	return -1;
+	panic("sys_arch_prctl called!");
+	return -1; //-1;
 }
 
 func sys_reboot(p *proc.Proc_t) int {

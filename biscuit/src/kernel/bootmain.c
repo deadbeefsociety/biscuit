@@ -104,6 +104,29 @@ bootmain(void)
 
 	checkmach();
 
+	/// XXX some msr checking
+	__asm__(
+	"mov $0xc0000080, %ecx\n"
+	"rdmsr\n"
+	"or 1<<8, %eax\n" // LME
+	"or 1<<0, %eax\n" // SCE
+	"wrmsr\n"
+
+	"mov $0xc0000080, %ecx\n"
+	"rdmsr\n" // read it again to verify
+	"mov %eax, %ebx\n" //readout value
+	);
+
+	// __asm__("mov	0xc0000080, %ecx\n"
+	// "rdmsr\n"
+	// );
+
+	register int ia32_efer_lowerbits asm("ebx");
+	pnum(ia32_efer_lowerbits);
+	pmsg("3 IA32_EFER EDI: ");
+	putch('\n');
+	// while (1); //debug
+	
 	// is this a valid ELF?
 	if (ELFHDR->e_magic != ELF_MAGIC)
 		goto bad;
@@ -358,7 +381,7 @@ ensure_pg(uint64_t *entry, int create)
 	return PTE_ADDR(*entry);
 }
 
-__attribute__((unused))
+// __attribute__((unused))
 static void
 ensure_empty(uint64_t *pgdir, uint64_t va)
 {
@@ -508,7 +531,7 @@ putch(char mark)
 		y = 0;
 }
 
-__attribute__((unused))
+// __attribute__((unused))
 static void
 pnum(uint64_t n)
 {
@@ -526,7 +549,7 @@ pnum(uint64_t n)
 	putch(' ');
 }
 
-__attribute__((unused))
+// __attribute__((unused))
 static void
 pmsg(char *msg)
 {

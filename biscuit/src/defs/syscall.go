@@ -139,7 +139,7 @@ const (
 	RUSAGE_SELF      = 1
 	RUSAGE_CHILDREN  = 2
 	SYS_MKNOD        = 133
-	SYS_ARCH_PRCTL   = 158 // not impl sys_arch_prctl; XXX just return 0 for now
+	SYS_ARCH_PRCTL   = 0x9e //158 // not impl sys_arch_prctl; XXX just return 0 for now
 	SYS_SETRLMT      = 160
 	SYS_SYNC         = 162
 	SYS_REBOOT       = 169

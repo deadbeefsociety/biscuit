@@ -402,11 +402,10 @@ func (p *Proc_t) trap_proc(tf *[defs.TFSIZE]uintptr, tid defs.Tid_t, intno, aux 
 		if intno == defs.GPFAULT {
 			fmt.Printf("%s -- TRAP: GPFAULT (hex 0x%x dec %d), RIP: %x\n", p.Name, intno,intno, tf[defs.TF_RIP])
 		}
-		if intno == defs.UD {
-			fmt.Printf("%s -- TRAP: UD (hex 0x%x dec %d), RIP: %x\n", p.Name, intno,intno, tf[defs.TF_RIP])
-			fastret = true;
-			restart = false;
-			break;
+		if intno == defs.UD { // #UD is illegal instruction https://github.com/torvalds/linux/blob/8395ae05/arch/x86/kernel/traps.c#L192
+			fmt.Printf("%s -- TRAP: UD (illegal instruction) (hex 0x%x dec %d), RIP: %x\n", p.Name, intno,intno, tf[defs.TF_RIP])
+			util.Tfdump(tf)
+			// break;
 		}
 		
 		util.Tfdump(tf)

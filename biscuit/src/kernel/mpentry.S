@@ -10,7 +10,8 @@
 .set CR0_PG,             (1 << 31)
 .set CR4_PAE,            (1 << 5)
 .set IA32_EFER,          0xc0000080
-.set IA32_EFER_LME,      (1 << 8)
+.set IA32_EFER_LME,      (1 << 8)  /*LME Long Mode Enable*/
+.set IA32_EFER_SCE,      (1 << 0)  /*SYSCALL ENABLE https://wiki.osdev.org/SYSENTER#Compatibility_across_Intel_and_AMD*/
 .set PGSIZE,             4096
 .set PROT_MODE_CSEG,     (1 << 3)
 .set PROT_MODE_CSEG64,   (3 << 3)
@@ -74,11 +75,15 @@ protcseg:
 	movl	8(%ebp), %ebx	// ebx = pmap
 	mov	%ebx, %cr3
 
-	# set IA32_EFER_LME
-	movl	$IA32_EFER, %ecx
+	# set IA32_EFER_LME and IA32_EFER_SCE; do this in real mode
+	# https://www.felixcloutier.com/x86/wrmsr
+	mov	$IA32_EFER, %ecx
 	rdmsr
-	orl	$IA32_EFER_LME, %eax
+	orl $IA32_EFER_LME, %eax
+	orl $IA32_EFER_SCE, %eax
 	wrmsr
+
+
 
 	# set paging
 	movl	%cr0, %eax
