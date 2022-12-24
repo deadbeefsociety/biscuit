@@ -109,9 +109,10 @@ func (s *syscall_t) Syscall(p *proc.Proc_t, tid defs.Tid_t, tf *[defs.TFSIZE]uin
 	}
 
 	sysno := int(tf[defs.TF_RAX])
-
-	fmt.Printf(" sysno: %v\n", sysno)
-
+	if sysno > 1 && sysno != 4{ //ignore read and write for debug print
+		fmt.Printf(" sysno: %v\n", sysno) 
+	}
+	
 	//lim, ok := _sysbounds[sysno]
 	//if !ok {
 	//	panic("bad limit")
